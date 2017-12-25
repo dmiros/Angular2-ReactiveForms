@@ -7,6 +7,8 @@ export class ProductData implements InMemoryDbService {
     createDb() {
         let products: IProduct[] = [
             {
+                // mora da se koristi Id umesto ProductId
+                // zato sto zahteva InmemoruWebApi
                 'id': 1,
                 'productName': 'Leaf Rake',
                 'productCode': 'GDN-0011',

@@ -61,17 +61,39 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
         // passing in this form's set of validation messages.
         this.genericValidator = new GenericValidator(this.validationMessages);
     }
-
+    
     ngOnInit(): void {
+        // this.customerForm= new FormGroup({
+        //     firstName: new FormControl(),
+        //     lastName: new FormControl(),
+        //     email: new FormControl(),
+        //     sendCatalog: newFormControl(true)});
         this.productForm = this.fb.group({
+            // prvi element niza je objekat, u kome se prosledjuje difoltna vrednost i disabled stanje
+            // drugi element niza je niz, u kome se prosledjuju validaciona pravila
+            // treci element niza je niz, u kome se prosledjuju asinhrona validaciona pravila
             productName: ['', [Validators.required,
                                Validators.minLength(3),
                                Validators.maxLength(50)]],
             productCode: ['', Validators.required],
             starRating: ['', NumberValidators.range(1, 5)],
+            // Kreira novi niz kontrola od zadatog niza stringova
+            // this.productForm.setControl('tags', this.fb.array(this.product.tags || []));
             tags: this.fb.array([]),
             description: ''
         });
+        // this.productForm.controls.productName.enable();
+
+        // valueChanges emituje event-e svaki put kada se promeni vrednost
+        // ako zelimo da posmatramo te promene Priijavljujemo se na valueChanges observable
+        // this.customerForm.get('notification').valueChanges
+        //              .subscribe(value => this.setNotification(value));
+
+        // const emailControl = this.customerForm.get('emailGroup.email');
+        // emailControl.valueChanges.debounceTime(1000).subscribe(value =>
+        // this.setMessage(emailControl));
+
+        // Read the product Id from the route parameter
 
         // Read the product Id from the route parameter
         this.sub = this.route.params.subscribe(
@@ -102,7 +124,12 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getProduct(id: number): void {
+        // ProductEditComponent.getProduct
+        //        productService.getProduct
+        //               productService.extractData(xx)
+        // test
         this.productService.getProduct(id)
+        .do(data => console.log('ProductEditComponent.getProduct: ' + JSON.stringify(data)))
             .subscribe(
                 (product: IProduct) => this.onProductRetrieved(product),
                 (error: any) => this.errorMessage = <any>error
@@ -110,6 +137,9 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onProductRetrieved(product: IProduct): void {
+        console.log('ProductEditComponent.onProductRetrieved: ');
+        // Ako je forma vec bila u upotrebi kada smo je pozvali, resetujemo je
+        // touched, dirty, ... tagovi se brisu pre nego sto se pokazu novopristigli podaci o proiyvodu sa servera
         if (this.productForm) {
             this.productForm.reset();
         }
@@ -122,12 +152,15 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // Update the data on the form
+        // patchValue - postavlja vrednosti u nekoliko konrola na stranici
+        // setValue - postavlja vrednosti u svim konrolama na stranici
         this.productForm.patchValue({
             productName: this.product.productName,
             productCode: this.product.productCode,
             starRating: this.product.starRating,
             description: this.product.description
         });
+        // za niz kontrola, koristi se setControl metoda
         this.productForm.setControl('tags', this.fb.array(this.product.tags || []));
     }
 

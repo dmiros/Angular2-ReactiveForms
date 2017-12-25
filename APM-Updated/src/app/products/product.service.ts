@@ -25,16 +25,24 @@ export class ProductService {
 
     getProduct(id: number): Observable<IProduct> {
         if (id === 0) {
+        // prvi nacin kreiramo novi observal (skraceno)
+        // skracena sintaksa za kod ispod
         return Observable.of(this.initializeProduct());
+        // drugi nacin kreiramo novi observal (ceo kod)
         // return Observable.create((observer: any) => {
         //     observer.next(this.initializeProduct());
+        // javljamo subscribe-erima da je prijava kompletna
         //     observer.complete();
         // });
         };
         const url = `${this.baseUrl}/${id}`;
+        // .map(xx => this.extradata(xx))
         return this.http.get(url)
             .map(this.extractData)
-            .do(data => console.log('getProduct: ' + JSON.stringify(data)))
+            // Redosled izvrsavanja kada stigne observable:
+            // (1)_ ProductService.getProduct
+            // (2) - ProductEditComponent.getProduct:
+            .do(data => console.log('ProductService.getProduct: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
@@ -76,6 +84,7 @@ export class ProductService {
 
     private extractData(response: Response) {
         let body = response.json();
+        console.log('extractData: ' + JSON.stringify(body));
         return body.data || {};
     }
 

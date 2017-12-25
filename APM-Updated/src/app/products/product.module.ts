@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule} from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-
+// lazni servis
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData }  from './product-data';
@@ -20,6 +20,7 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     SharedModule,
     ReactiveFormsModule,
+    // ProductData - podaci koji zelimo da nam lazira webApi
     InMemoryWebApiModule.forRoot(ProductData),
     RouterModule.forChild([
       { path: 'products', component: ProductListComponent },
