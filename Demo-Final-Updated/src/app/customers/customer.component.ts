@@ -38,6 +38,9 @@ export class CustomerComponent implements OnInit {
     emailMessage: string;
 
     get addresses(): FormArray{
+        // .get metoda vraca AbstractControl
+        // <FormArray> - kalup, definise da grupa formArray
+        // tj. definise da je tip formArray an formControl ili formGrup
         return <FormArray>this.customerForm.get('addresses');
     }
 
@@ -60,17 +63,38 @@ export class CustomerComponent implements OnInit {
             notification: 'email',
             rating: ['', ratingRange(1, 5)],
             sendCatalog: true,
+            // this.fb.array() Angulo-va metoda koja pravi niz
+            // od elemenata koji joj damo ( prosledimo u parametrima)
             addresses: this.fb.array([this.buildAddress()])
         });
-
+        // obavestava nas o promenama u input elementu value preko observabala
+        // mi se prijavljujemo se na observebal o promenama u value elementu
         this.customerForm.get('notification').valueChanges
                          .subscribe(value => this.setNotification(value));
+
+        this.customerForm.get('lastName').valueChanges
+                         .subscribe(ovdemipisi => this.lastnamelog(ovdemipisi));      
+
+        this.customerForm.get('emailGroup').valueChanges
+                         .subscribe(ovdemipisiuobjektu => this.peropisiukon(ovdemipisiuobjektu));
+                                                   
+   /*                       this.customerForm.get('emailGroup').valueChanges
+                         .subscribe(ovdemipisi => {this.peropisiukon(ovdemipisi);
+                                                   console.log(JSON.stringify(ovdemipisi));
+                                                   console.log(ovdemipisi);
+                                                   });
+ */
 
         const emailControl = this.customerForm.get('emailGroup.email');
         emailControl.valueChanges.debounceTime(1000).subscribe(value =>
             this.setMessage(emailControl));
     }
-
+    lastnamelog(zika:string): void {
+        return console.log(zika)
+    }
+    peropisiukon(pera:any): void {
+        return console.log(pera)
+    }
     addAddress(): void {
         this.addresses.push(this.buildAddress());
     }
@@ -114,5 +138,15 @@ export class CustomerComponent implements OnInit {
             phoneControl.clearValidators();
         }
         phoneControl.updateValueAndValidity();
+
+        // this.customerForm.controls.emailGroup.controls.email.valid
+        // this.customerForm.get('emailGroup.email').valid
+        console.log(this.customerForm) ;
+        // console.log(this.customerForm.get('emailGroup.email').controls);
+        console.log(this.customerForm.get('emailGroup.email').value.email);
+        console.log(notifyVia) ;
+        console.log(this.customerForm.value.lastName);
+        console.log(this.customerForm.value.lastName)
+        // this.customerForm.controls.emailGroup.controls.email.value['email']
     }
 }
